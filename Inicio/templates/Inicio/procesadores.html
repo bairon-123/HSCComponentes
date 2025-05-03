@@ -1,10 +1,8 @@
 {% extends 'Inicio/plantMain.html' %}
 {% load static %}
-
 {% block css %}
 <link rel="stylesheet" href="{% static 'Inicio/css/estilo-proce.css' %}">
 {% endblock css %}
-
 {% block imagen %}
 <div class="img-hd">
     <div class="txt-hd">
@@ -12,7 +10,6 @@
     </div>
 </div>
 {% endblock imagen %}
-
 {% block contenido %}
 <section class="items">
     <div class="container">
@@ -30,37 +27,3 @@
     </div>
 </section>
 {% endblock contenido %}
-
-{% block extra_footer %}
-<footer class="pie-pagina mt-auto">
-    <div class="container">
-        <div class="grupo-1 text-center">
-            <div class="row">
-                <div class="col-6">
-                    <div class="box">
-                        <h2>Sobre nosotros</h2>
-                        <ul class="lista">
-                            <li>13 finos</li>
-                            <li>Robamos terrible maldito y de menor</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="box">
-                        <h2>Síguenos en nuestras redes</h2>
-                        <div class="red-social">
-                            <a href="#" class="fa fa-facebook redes-sociales"></a>
-                            <a href="#" class="fa fa-instagram redes-sociales"></a>
-                            <a href="#" class="fa fa-twitter redes-sociales"></a>
-                            <a href="#" class="fa fa-youtube redes-sociales"></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="grupo-2">
-        <small>&copy; 2022 <b>HSC Componentes</b> - Todos los Derechos Reservados.</small>
-    </div>
-</footer>
-{% endblock extra_footer %}

@@ -90,14 +90,9 @@ REST_FRAMEWORK={
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.oracle',
-        'NAME': '127.0.0.1:1521/xe',
-        'USER': 'usuario',
-        'PASSWORD': 'usuario1',
-        'TEST':{
-            'USER': 'default_test',
-            'TBLSPACE': 'default_test_tbls',
-            'TBLSPACE_TEMP': 'default_test_tbls_tmp',
-        }
+        'NAME': 'localhost:1521/xe', 
+        'USER': 'SYSTEM',
+        'PASSWORD': 'Byron-1313',
     }
 }
 

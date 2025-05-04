@@ -15,6 +15,14 @@ def vistamod(request):
     return render(request,'Inicio/modificar_producto.html')
 
 
+def inicio(request):
+    if 'usuario_username' in request.session:
+        usuario = Usuario.objects.get(username=request.session['usuario_username'])
+        contexto = {"usuario": usuario}
+        return render(request, 'Inicio/index.html', contexto)
+    else:
+        return redirect('iniciar')
+
 def addprod (request):
     tipoProd = TipoProd.objects.all()
     marca = Marca.objects.all()

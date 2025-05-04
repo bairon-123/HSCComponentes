@@ -3,6 +3,8 @@ from .views import iniciar,iniciar_sesion, inicio, inicioadmin, registrar_m, reg
 from django.conf import settings
 from django.conf.urls.static import static
 
+from Inicio import views
+
 
 urlpatterns = [
 
@@ -70,10 +72,16 @@ urlpatterns = [
     path('miperfil/<id>',perfilusuario, name="miperfil"),
     path ('mostrarperfil/<id>', mostrarperfil, name="mostrarperfil"),
     path ('modificarPerfil/<id>', modificarPerfil, name="modificarPerfil"),
-    
+    path('recuperar-contrasenia/', views.recovery_pass, name='recuperar_contrasenia'),
 
 
+
+    path('buscar-compra/', views.buscar_compra, name='buscar_compra'),
     path('edicionProducto/<idProducto>', edicionProducto, name="edicionProducto"),
     path('editarProducto/<idProducto>', editarProducto, name="editarProducto"),
+    path('historial-compra/<str:username>/', views.historial_compra, name='historial_compra'),
+
+
+    
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -154,8 +154,9 @@
                         <div class="mb-4">
                           <label for="exampleInputPassword1" class="form-label font-weight-bold" >Contraseña</label>
                           <input type="password" class="form-control bg-dark-x mb-2" name ="contra" id="contra" placeholder="Ingrese su contraseña">
-                          <a href="/pages/recovery_pass.html"  class="form-text text-muted text-decoration-none">¿Haz oldidado tu contraseña?</a>
-                        </div>
+                          <a href="{% url 'recuperar_contrasenia' %}" class="form-text text-muted text-decoration-none">
+                            ¿Has olvidado tu contraseña?
+                          </a>
                     
                         <button type="submit" class="btn btn-primary w-100">Iniciar Sesión</button>
                         <div class="text-center px-lg-5 pt-lg-3 pb-lg-4 p-4 w-100 mt-auto">

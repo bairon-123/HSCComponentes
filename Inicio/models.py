@@ -87,3 +87,27 @@ class Detalle (models.Model):
         return self.subTotal
 
 
+class Carrito(models.Model):
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    cantidad = models.PositiveIntegerField(default=1)
+
+    def __str__(self):
+        return f"{self.usuario.username} - {self.producto.nombreProducto} ({self.cantidad})"
+    
+class Compra(models.Model):
+        usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+        fecha = models.DateTimeField(auto_now_add=True)
+        total = models.DecimalField(max_digits=10, decimal_places=2)
+
+        def __str__(self):
+          return f"Compra de {self.usuario} el {self.fecha.strftime('%Y-%m-%d')}"
+        
+class DetalleCompra(models.Model):
+    compra = models.ForeignKey(Compra, on_delete=models.CASCADE, related_name='detalles')
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    cantidad = models.IntegerField()
+    subtotal = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return f"{self.cantidad} x {self.producto.nombreProducto} (Compra {self.compra.id})"

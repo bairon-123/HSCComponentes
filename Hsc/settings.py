@@ -38,13 +38,21 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'rest_framework',
-    'Inicio'
+    'rest_framework.authtoken',
+    'rest_framework.documentation',
+    'api',
+    'Inicio',
+    'drf_spectacular',
+    'django_extensions',    
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -52,6 +60,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# Configuración CORS
+CORS_ALLOW_ALL_ORIGINS = True
 ROOT_URLCONF = 'Hsc.urls'
 
 TEMPLATES = [
@@ -75,11 +85,28 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Hsc.wsgi.application'
 
-REST_FRAMEWORK={
-    'DEFAULT_AUTHENTICATION_CLASSES':[
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
-    ]
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10
 }
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+    
+]
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases

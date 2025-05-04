@@ -1,5 +1,5 @@
-from django.shortcuts import render,redirect
-from .models import Usuario,Direccion,Comuna,Region,TipoUsuario, Producto, Marca,Categoria,TipoProd,Marca
+from django.shortcuts import get_object_or_404, render,redirect
+from .models import Compra, Usuario,Direccion,Comuna,Region,TipoUsuario, Producto, Marca,Categoria,TipoProd,Marca
 from django.contrib import messages
 from .Carrito import Carrito
 
@@ -38,10 +38,11 @@ def carrito(request,id):
 def perfilusuario(request,id):
     usuario = Usuario.objects.get(username=id)
     contexto = {"usuario":usuario}
-    
+
     return render(request,'Inicio/perfil-user.html',contexto)
 
-
+def recovery_pass(request):
+    return render(request, 'Inicio/recovery_pass.html')
 
 def mostrarperfil(request,id):
     usuario = Usuario.objects.get(username=id)
@@ -64,7 +65,8 @@ def modificarPerfil(request,id):
 
 
 
-
+def buscar_compra(request):
+    return render(request, 'pages/buscar_compra.html')
 
 
 
@@ -243,12 +245,6 @@ def iniciar_sesion(request):
         messages.error(request,'El usuario o la contraseña son incorrectos')
         return redirect ('iniciar')
     
- 
-
-
-
-
-
 
     
 def newProd(request):
@@ -345,4 +341,14 @@ def limpiar_producto(request,usuario):
 
 
 
+def historial_compra(request, username,):
+    if username and username != request.user.username:
+        return redirect('iniciar')  # Bloquea si intenta ver otro perfil
+
+    historial = Compra.objects.filter(usuario=request.user)
+    return render(request, 'pages/historial_compra.html', 
+    {
+        'historial': historial,
+        'usuario': request.user
+    })
 

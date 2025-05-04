@@ -34,7 +34,6 @@ urlpatterns = [
 
     #Pag menu admin
     path ('menuadmin/',menuadmin,name="menu_admin"),
-
     path('micadmin/<id>',micadmin,name="micadmin"),
     path('tecladoadmin/<id>',tecladoadmin,name="tecladoadmin"),
     path('mouseAdmin/<id>',mouseAdmin,name="mouseAdmin"),
@@ -72,14 +71,14 @@ urlpatterns = [
     path('miperfil/<id>',perfilusuario, name="miperfil"),
     path ('mostrarperfil/<id>', mostrarperfil, name="mostrarperfil"),
     path ('modificarPerfil/<id>', modificarPerfil, name="modificarPerfil"),
-    path('recuperar-contrasenia/', views.recovery_pass, name='recuperar_contrasenia'),
-
-
+    path('recuperar-contrasenia/', views.recovery_pass, name='recuperar_contrasenia'),    
 
     path('buscar-compra/', views.buscar_compra, name='buscar_compra'),
     path('edicionProducto/<idProducto>', edicionProducto, name="edicionProducto"),
     path('editarProducto/<idProducto>', editarProducto, name="editarProducto"),
     path('historial-compra/<str:username>/', views.historial_compra, name='historial_compra'),
+    
+    
 
 
     

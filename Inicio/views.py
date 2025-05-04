@@ -26,9 +26,13 @@ def iniciar(request):
 
     return render(request,'Inicio/inicio_sesion.html')
 
+
+
 def menuadmin(request):
 
     return render(request,'Inicio/dashboard-admin.html')
+
+
 
 def carrito(request,id):
     usuario = Usuario.objects.get(username=id)
@@ -40,6 +44,10 @@ def perfilusuario(request,id):
     contexto = {"usuario":usuario}
 
     return render(request,'Inicio/perfil-user.html',contexto)
+
+
+
+
 
 def recovery_pass(request):
     return render(request, 'Inicio/recovery_pass.html')
@@ -89,8 +97,7 @@ def micro(request,idmic,usuario):
     username = Usuario.objects.get(username=usuario)
     contexto ={"prod": productos,"usuario":username} 
     return render(request, "Inicio/mic1.html",contexto)    
-
-
+    
 
 # TECLADOS
 def mostrarTeclado(request, id):
@@ -226,6 +233,7 @@ def registrar_m (request):
         x = Usuario.objects.get(username = user)
         Direccion.objects.create(descripcionDir = direccion, usuario = x,region = region2)
         return redirect ('iniciar')
+    
 
         
 def iniciar_sesion(request):

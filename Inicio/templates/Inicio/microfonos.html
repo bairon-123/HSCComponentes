@@ -12,22 +12,23 @@
 {% endblock imagen %}
 {% block contenido %}
 <section class="items">
-
     <div class="container">
         <div class="row items no-gutter">
             {% for c in mic %}
             <div class="col-xl-3 col-md-6 col-sm-12">
-                
-                <a href="{% url 'micro' idmic=c.idProducto usuario=usuario.username%}">
-                    <img src="{{c.imagenProd.url}}" alt="Error :D" id="img2" class="img-fluid">
-                    <p class="text-break">{{c.nombreProducto}}</p>
-                    <h6>$ {{c.precioProducto}}</h6>
-                </a>
+              <a href="{% url 'micro' idmic=c.idproducto usuario=usuario.username %}">
+                <img src="/media/{{ c.imagenprod }}" alt="Imagen de micrófono" class="img-fluid" id="img2">
+                <p class="text-break">{{ c.nombreproducto }}</p>
+                <h6>$ {{ c.precioproducto }}</h6>
+              </a>
             </div>
             {% endfor %}
         </div>
     </div>
 </section>
+<div class="container text-center my-4">
+    <a href="{% url 'index' usuario.username %}" class="btn btn-primary">Volver al Inicio</a>
+</div>
 {% endblock contenido %}
     
 <script src="{% static 'Inicio/js/v-carrito.js' %}"></script>

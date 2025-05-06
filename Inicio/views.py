@@ -1,7 +1,12 @@
-from django.shortcuts import get_object_or_404, render,redirect
-from .models import Compra, Usuario,Direccion,Comuna,Region,TipoUsuario, Producto, Marca,Categoria,TipoProd,Marca
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
+from Inicio.forms import ProductoForm
+from .models import (
+    Compra, Usuario, Direccion, Comuna, Region,
+    Producto, Marca, Categoria, Tipoprod, Tipousuario, Detalle
+)
 from .Carrito import Carrito
+from Inicio import models
 
 # Create your views here.
 def inicio(request):
@@ -14,21 +19,19 @@ def vistamod(request):
     
     return render(request,'Inicio/modificar_producto.html')
 
-
-def inicio(request):
-    if 'usuario_username' in request.session:
-        usuario = Usuario.objects.get(username=request.session['usuario_username'])
+def inicio(request, id=None):
+    if id:
+        usuario = Usuario.objects.get(username=id)
         contexto = {"usuario": usuario}
         return render(request, 'Inicio/index.html', contexto)
     else:
         return redirect('iniciar')
-
-def addprod (request):
-    tipoProd = TipoProd.objects.all()
+def addprod(request):
+    tipoprod = Tipoprod.objects.all()
     marca = Marca.objects.all()
-    contexto = {"tipoProd":tipoProd,"Marca":marca}
+    contexto = {"TipoProd": tipoprod, "Marca": marca}
+    return render(request, 'Inicio/agregar_producto.html', contexto)
 
-    return render (request,'Inicio/agregar_producto.html',contexto)   
 
 def iniciar(request):
 
@@ -40,7 +43,12 @@ def menuadmin(request):
 
     return render(request,'Inicio/dashboard-admin.html')
 
-
+def perfiluser(request, id):
+    try:
+        usuario = Usuario.objects.get(username=id)
+        return render(request, 'Inicio/index.html', {'usuario': usuario})
+    except Usuario.DoesNotExist:
+        return redirect('iniciar')
 
 def carrito(request,id):
     usuario = Usuario.objects.get(username=id)
@@ -55,34 +63,70 @@ def perfilusuario(request,id):
 
 
 
-
-
 def recovery_pass(request):
     return render(request, 'Inicio/recovery_pass.html')
 
-def mostrarperfil(request,id):
+def mostrarperfil(request, id):
     usuario = Usuario.objects.get(username=id)
-    direccion = Direccion.objects.get(usuario=id)
+    try:
+        direccion = Direccion.objects.get(usuario=usuario)
+    except Direccion.DoesNotExist:
+        direccion = None
+
     region = Region.objects.all()
     comuna = Comuna.objects.all()
-    contexto = {"usuario":usuario, "direccion" : direccion,"region" : region,"comuna" : comuna}
-    return render(request, 'Inicio/perfil_usuario.html',contexto)    
-
-def modificarPerfil(request,id):
-    usuario = Usuario.objects.get(username=id)
-    contexto = {"usuario":usuario}
-    usuario.username= request.POST.get('username')
-    usuario.nombre = request.POST.get('nomusu')
-    usuario.apellido = request.POST.get('apepusu')
-    usuario.email = request.POST.get('mailusu')
-    usuario.save()
-    messages.success(request, '¡Perfil modificado correctamente!')
-    return render (request,'Inicio/perfil-user.html',contexto)
+    contexto = {
+        "usuario": usuario,
+        "direccion": direccion,
+        "region": region,
+        "comuna": comuna
+    }
+    return render(request, 'Inicio/perfil_usuario.html', contexto)
 
 
 
-def buscar_compra(request):
-    return render(request, 'pages/buscar_compra.html')
+
+def modificarPerfil(request, username):
+    usuario = get_object_or_404(Usuario, username=username)
+
+    try:
+        direccion = Direccion.objects.get(usuario=usuario)
+    except Direccion.DoesNotExist:
+        direccion = Direccion(usuario=usuario)
+
+    if request.method == 'POST':
+        usuario.nombre = request.POST.get('nombre', '').strip()
+        usuario.apellido = request.POST.get('apellido', '').strip()
+        usuario.email = request.POST.get('email', '').strip()
+        
+        direccion.descripciondir = request.POST.get('direccion', '').strip()
+
+        region_id = request.POST.get('region')
+        comuna_id = request.POST.get('comuna')
+
+        if region_id:
+            direccion.region_id = int(region_id)
+        if comuna_id:
+            direccion.comuna_id = int(comuna_id)
+
+        # Guardar los cambios
+        usuario.save()
+        direccion.save()
+
+        messages.success(request, "Perfil actualizado correctamente.")
+        return redirect('miperfil', id=usuario.username)
+        
+
+    # Mostrar el formulario si es GET
+    regiones = Region.objects.all()
+    comunas = Comuna.objects.all()
+
+    return render(request, 'Inicio/perfil_usuario.html', {
+        'usuario': usuario,
+        'direccion': direccion,
+        'region': regiones,
+        'comuna': comunas
+    })
 
 
 
@@ -99,12 +143,14 @@ def micadmin (request,id):
     usuario = Usuario.objects.get(username=id)
     contexto = {"mic": micros,"usuario":usuario}
     return render (request,'Inicio/micadmin.html',contexto) 
-  
-def micro(request,idmic,usuario):
-    productos = Producto.objects.get(idProducto = idmic)
-    username = Usuario.objects.get(username=usuario)
-    contexto ={"prod": productos,"usuario":username} 
-    return render(request, "Inicio/mic1.html",contexto)    
+
+
+def micro(request, idmic, usuario):
+    productos = get_object_or_404(Producto, idproducto=idmic)  # ✅ corregido aquí
+    username = get_object_or_404(Usuario, username=usuario)
+    contexto = {"prod": productos, "usuario": username}
+    return render(request, "Inicio/mic1.html", contexto)
+
     
 
 # TECLADOS
@@ -121,7 +167,7 @@ def tecladoadmin (request,id):
     return render (request,'Inicio/tecladoadmin.html',contexto) 
 
 def teclado(request,idk, usuario):
-    productos = Producto.objects.get(idProducto = idk)
+    productos = Producto.objects.get(idproducto = idk)
     username = Usuario.objects.get(username=usuario)
     contexto = {"prod": productos,"usuario":username}
     return render(request, "Inicio/mic1.html",contexto)
@@ -141,7 +187,7 @@ def mouseAdmin (request,id):
     
 def mouse(request,idm,usuario):
     usuario = Usuario.objects.get(username=usuario)
-    productos = Producto.objects.get(idProducto = idm)
+    productos = Producto.objects.get(idproducto = idm)
     contexto = {"prod": productos,"usuario":usuario}
     return render(request, "Inicio/mic1.html",contexto)    
 
@@ -159,7 +205,7 @@ def graficaAdmin (request,id):
     return render (request,'Inicio/graficaAdmin.html',contexto) 
     
 def grafica(request,idg,usuario):
-    productos = Producto.objects.get(idProducto = idg)
+    productos = Producto.objects.get(idproducto = idg)
     usuario = Usuario.objects.get(username= usuario)
     contexto = {"prod": productos,"usuario":usuario}
     return render(request, "Inicio/mic1.html",contexto)    
@@ -178,10 +224,12 @@ def procesadorAdmin (request,id):
     return render (request,'Inicio/procesadorAdmin.html',contexto) 
     
 def procesador(request,idp,usuario):
-    productos = Producto.objects.get(idProducto = idp)
+    productos = Producto.objects.get(idproducto = idp)
     usuario = Usuario.objects.get(username= usuario)
     contexto = {"prod": productos,"usuario":usuario}
     return render(request, "Inicio/mic1.html",contexto)  
+
+
 
 # RAMS
 def mostrarRam(request,id):
@@ -197,7 +245,7 @@ def ramAdmin (request,id):
     return render (request,'Inicio/ramAdmin.html',contexto) 
     
 def ram(request,idr,usuario):
-    productos = Producto.objects.get(idProducto = idr)
+    productos = Producto.objects.get(idproducto = idr)
     usuario = Usuario.objects.get(username= usuario)
     contexto = {"prod": productos,"usuario":usuario}
     return render(request, "Inicio/mic1.html",contexto )    
@@ -205,6 +253,8 @@ def ram(request,idr,usuario):
 
 
 
+def buscar_compra(request):
+    return render(request, 'pages/buscar_compra.html')
 
 
 
@@ -227,10 +277,9 @@ def registrar_m (request):
     comuna = request.POST['comuna']
     nombree = request.POST['nombre']
     apellido = request.POST['apellido']
-    
-    comuna2 = Comuna.objects.get(idComuna = comuna)
-    region2 = Region.objects.get(idRegion = region)
-    tipousuario2 = TipoUsuario.objects.get(idTipoUsuario = 2)
+    comuna2 = Comuna.objects.get(idcomuna=comuna)
+    region2 = Region.objects.get(idregion=region)
+    tipousuario2 = Tipousuario.objects.get(idtipousuario=2)
     existe = None
     try:
         existe = Usuario.objects.get(username=user)
@@ -239,40 +288,42 @@ def registrar_m (request):
     except:
         Usuario.objects.create(username = user , contrasennia = contra, nombre = nombree, apellido = apellido, email = correo,tipousuario = tipousuario2)
         x = Usuario.objects.get(username = user)
-        Direccion.objects.create(descripcionDir = direccion, usuario = x,region = region2)
+        Direccion.objects.create(descripciondir=direccion, usuario=x, region=region2, comuna=comuna2)
         return redirect ('iniciar')
     
 
         
 def iniciar_sesion(request):
-    usuario1 = request.POST['usuario']
-    contra1 = request.POST['contra']
-    try:
-        usuario2 = Usuario.objects.get(username = usuario1,contrasennia = contra1)
-        
-        if(usuario2.tipousuario.idTipoUsuario == 1):
-            return redirect ('menu_admin')
-        else:    
-            contexto = {"usuario":usuario2}
-            
-            return render(request, 'Inicio/index.html', contexto)            
+    if request.method == 'POST':
+        usuario1 = request.POST.get('usuario')
+        contra1 = request.POST.get('contra')
 
-    except:
-        messages.error(request,'El usuario o la contraseña son incorrectos')
-        return redirect ('iniciar')
-    
+        try:
+            usuario2 = Usuario.objects.get(username=usuario1, contrasennia=contra1)
+
+            # Redirige según el tipo de usuario
+            if usuario2.tipousuario.idtipousuario == 1:
+                return redirect('menu_admin')
+            else:
+                return redirect('miperfil', usuario2.username)
+
+        except Usuario.DoesNotExist:
+            messages.error(request, 'El usuario o la contraseña son incorrectos')
+            return redirect('iniciar')
+    else:
+        return redirect('iniciar')
 
     
 def newProd(request):
     nombre = request.POST['nomprod']
-    tipoProd = request.POST['tipoprod']
+    TipoProd = request.POST['TipoProd']
     marca = request.POST['marcaprod']
     stock = request.POST['stockprod']
     imagen = request.FILES['imgprod']
     desc = request.POST['descprod']
     precio = request.POST['precio']
     
-    idProd2 = TipoProd.objects.get(idTiporod = tipoProd)
+    idProd2 = TipoProd.objects.get(idTiporod = TipoProd)
     marca2 = Marca.objects.get(idMarca = marca)
     existe = None
     try:
@@ -295,34 +346,56 @@ def eliminarProducto(request, idProducto):
 
  
 def edicionProducto(request, idProducto):
-    tipoProd = TipoProd.objects.all()
+    Tipoprod = Tipoprod.objects.all()
     marca = Marca.objects.all()
     producto = Producto.objects.get(idProducto=idProducto)
 
-    return render(request,'Inicio/edicionProducto.html', {"producto": producto, "tipoProd":tipoProd,"Marca":marca})
+    return render(request,'Inicio/edicionProducto.html', {"producto": producto, "Tipoprod":Tipoprod,"Marca":marca})
 
-def editarProducto(request,idProducto):
-    producto = Producto.objects.get(idProducto=idProducto)
-    tiprod1 =request.POST['tipoprod'] 
-    tipoprod2 = TipoProd.objects.get(idTiporod =tiprod1)
-    marca1 = request.POST['marcaprod']
-    marca2 = Marca.objects.get(idMarca = marca1)
-    if (request.FILES.get("imgprod")):
-        fotoprod =  request.FILES['imgprod']
-        producto.imagenProd = fotoprod
-    producto.nombreProducto = request.POST.get('nomprod')
-    producto.tipoprod = tipoprod2
-    producto.marca = marca2
-    producto.stockProd = request.POST.get('stockprod')
-    producto.precioProducto = request.POST.get('precio')
-    producto.especificacionProd = request.POST.get('descprod')
-    producto.save()
-    messages.success(request, '¡Producto Modificado!')
-    return redirect('indexadmin')
+
+def editarProducto(request, idproducto):
+    producto = get_object_or_404(Producto, idproducto=idproducto)
     
+    if request.method == 'POST':
+        form = ProductoForm(request.POST, request.FILES, instance=producto)
+        if form.is_valid():
+            # Si no se sube nueva imagen, mantener la existente
+            
+            if 'imgprod' in request.FILES and request.FILES['imgprod']:
+                producto.imagenprod = request.FILES['imgprod']
+            form.save()
+            messages.success(request, 'Producto actualizado correctamente')
+            return redirect('lista_productos')  # Ajusta según tu vista
+        else:
+            messages.error(request, 'Por favor corrige los errores')
+    else:
+        form = ProductoForm(instance=producto)
+    
+    return render(request, 'Inicio/edicionProducto.html', {
+        'form': form,
+        'producto': producto,
+        'Marca': Marca.objects.all(),
+        'Tipoprod': Tipoprod.objects.all(),
+        'marca_actual': producto.marca,
+        'tipo_actual': producto.tipoprod,
+    })
 
 
 
+
+def confirmar_eliminar(request, producto_id):
+    producto = get_object_or_404(Producto, idProducto=producto_id)
+    
+    if request.method == 'POST':
+        producto.delete()
+        messages.success(request, 'Producto eliminado correctamente')
+        return redirect('lista_productos')  # Redirige a donde necesites
+    
+    return render(request, 'confirmar_eliminar.html', {'producto': producto})
+
+
+
+ 
 
 def agregar_producto(request, idProducto, usuario):
     usuario2 = Usuario.objects.get(username=usuario)
@@ -357,14 +430,34 @@ def limpiar_producto(request,usuario):
 
 
 
-def historial_compra(request, username,):
-    if username and username != request.user.username:
-        return redirect('iniciar')  # Bloquea si intenta ver otro perfil
 
-    historial = Compra.objects.filter(usuario=request.user)
-    return render(request, 'pages/historial_compra.html', 
-    {
-        'historial': historial,
-        'usuario': request.user
-    })
+
+
+def historial_compra(request, id):
+    try:
+        usuario = Usuario.objects.get(username=id)
+        return render(request, 'Inicio/historial_compra.html', {'usuario': usuario})
+    except Usuario.DoesNotExist:
+        return redirect('iniciar')
+
+
+
+def add_to_cart(request, idproducto, usuario):
+    # Obtener usuario y producto
+    user = get_object_or_404(Usuario, username=usuario)
+    producto = get_object_or_404(Producto, idproducto=idproducto)
+
+    # Crear o actualizar el carrito
+    carrito_item, created = Carrito.objects.get_or_create(
+        usuario=user,
+        producto=producto,
+        defaults={'cantidad': 1}
+    )
+
+    if not created:
+        carrito_item.cantidad += 1
+        carrito_item.save()
+
+    messages.success(request, f"{producto.nombreproducto} añadido al carrito.")
+    return redirect('mostrarMic', usuario.username)
 

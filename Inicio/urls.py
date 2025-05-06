@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import iniciar,iniciar_sesion, inicio, inicioadmin, registrar_m, registrarse, newProd,addprod,vistamod,eliminarProducto,menuadmin,micadmin,tecladoadmin,mouseAdmin,ramAdmin,graficaAdmin,procesadorAdmin,mostrarTeclado,teclado,mostrarMic,micro,mostrarMouse,mouse,mostrarGrafica,grafica,mostrarRam,ram,mostrarProcesador,procesador,carrito,perfilusuario,edicionProducto,editarProducto, mostrarperfil, modificarPerfil ,agregar_producto,eliminar_producto,restar_producto,limpiar_producto
+from .views import iniciar,iniciar_sesion, inicio, inicioadmin, perfiluser, registrar_m, registrarse, newProd,addprod,vistamod,eliminarProducto,menuadmin,micadmin,tecladoadmin,mouseAdmin,ramAdmin,graficaAdmin,procesadorAdmin,mostrarTeclado,teclado,mostrarMic,micro,mostrarMouse,mouse,mostrarGrafica,grafica,mostrarRam,ram,mostrarProcesador,procesador,carrito,perfilusuario,edicionProducto,editarProducto, mostrarperfil, modificarPerfil ,agregar_producto,eliminar_producto,restar_producto,limpiar_producto
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -31,6 +31,8 @@ urlpatterns = [
     #modificar un producto
     path('modificar/',vistamod,name="modificar"),
     path('eliminarProducto/<idProducto>',eliminarProducto,name="eliminarProducto"),
+    path('confirmar_eliminar/<int:producto_id>/', views.confirmar_eliminar, name='confirmar_eliminar'),
+    
 
     #Pag menu admin
     path ('menuadmin/',menuadmin,name="menu_admin"),
@@ -42,23 +44,45 @@ urlpatterns = [
     path('procesadorAdmin/<id>',procesadorAdmin,name="procesadorAdmin"),
     
     #Mostrar productos
-    path('teclados/<id>',mostrarTeclado,name="teclados"),
-    path('teclados/<idk>/<usuario>',teclado, name="teclado"),
+    # MICRÓFONOS
+    path('microfonos/<str:id>', mostrarMic, name="mostrarMic"),
+    path('microfono/<int:idmic>/<str:usuario>', micro, name="micro"),
+    path('add/<int:idproducto>/<str:usuario>/', views.add_to_cart, name='Add'),
+    path('mic-admin/<str:id>/', views.micadmin, name="micadmin"),
+    
 
-    path('microfonos/<id>',mostrarMic, name="mostrarMic"),
-    path('microfono/<idmic>/<usuario>',micro, name="micro"),
+    # MOUSE
+    path('mouses/<str:id>', mostrarMouse, name="mostrarMouse"),
+    path('mouse/<int:idm>/<str:usuario>', mouse, name="mouse"),
+    path('mouse-admin/<str:id>/', views.mouseAdmin, name="mouseAdmin"),
+    path('mouse/<int:idmic>/<str:usuario>/', views.mouseAdmin, name='mouse'),
 
-    path('mouses/<id>',mostrarMouse, name="mostrarMouse"),
-    path('mouses/<idm>/<usuario>',mouse, name="mouse"),
 
-    path('graficas/<id>',mostrarGrafica, name="mostrarGrafica"),
-    path('graficas/<idg>/<usuario>',grafica, name="grafica"),
+    # TECLADO
+    path('teclados/<str:id>', mostrarTeclado, name="teclados"),
+    path('teclado/<int:idk>/<str:usuario>', teclado, name="teclado"),
+    path('teclado-admin/<str:id>/', views.tecladoadmin, name="tecladoadmin"),
 
-    path('rams/<id>',mostrarRam, name="mostrarRam"),
-    path('rams/<idr>/<usuario>',ram, name="ram"),
 
-    path('procesadores/<id>',mostrarProcesador, name="mostrarProcesador"),
-    path('procesadores/<idp>/<usuario>',procesador, name="procesador"),
+
+    # GRAFICA
+    path('graficas/<str:id>', mostrarGrafica, name="mostrarGrafica"),
+    path('grafica/<int:idg>/<str:usuario>', grafica, name="grafica"),
+    path('grafica-admin/<str:id>/', views.graficaAdmin, name="graficaAdmin"),
+
+
+
+    # RAM
+    path('rams/<str:id>', mostrarRam, name="mostrarRam"),
+    path('ram/<int:idr>/<str:usuario>', ram, name="ram"),
+    path('ram-admin/<str:id>/', views.ramAdmin, name="ramAdmin"),
+
+
+    # PROCESADOR
+    path('procesadores/<str:id>', mostrarProcesador, name="mostrarProcesador"),
+    path('procesador/<int:idp>/<str:usuario>', procesador, name="procesador"),
+    path('procesador-admin/<str:id>/', views.procesadorAdmin, name="procesadorAdmin"),
+
 
 
     #Carrito
@@ -70,15 +94,15 @@ urlpatterns = [
     #Usuario
     path('miperfil/<id>',perfilusuario, name="miperfil"),
     path ('mostrarperfil/<id>', mostrarperfil, name="mostrarperfil"),
-    path ('modificarPerfil/<id>', modificarPerfil, name="modificarPerfil"),
+    path('modificarperfil/<str:username>/', views.modificarPerfil, name='modificarPerfil'),
     path('recuperar-contrasenia/', views.recovery_pass, name='recuperar_contrasenia'),    
-
     path('buscar-compra/', views.buscar_compra, name='buscar_compra'),
     path('edicionProducto/<idProducto>', edicionProducto, name="edicionProducto"),
     path('editarProducto/<idProducto>', editarProducto, name="editarProducto"),
-    path('historial-compra/<str:username>/', views.historial_compra, name='historial_compra'),
-    
-    
+    path('historial-compra<str:id>/', views.historial_compra, name='historial_compra'),
+    path('index/<id>',perfiluser, name="index"),
+    path('index/<str:id>/', inicio, name="index"),
+    path('editar-producto/<int:idproducto>/', views.editarProducto, name='editar_producto'),
 
 
     

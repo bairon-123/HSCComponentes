@@ -1,7 +1,7 @@
 from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from Inicio.models import Producto, Marca, TipoProd, Carrito
+from Inicio.models import Producto, Marca, Tipoprod, Carrito
 from .serializers import (ProductoSerializer, MarcaSerializer, TipoProdSerializer, CarritoSerializer)
 from django.shortcuts import get_object_or_404
 
@@ -24,7 +24,7 @@ class MarcaViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = MarcaSerializer
 
 class TipoProdViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TipoProd.objects.all()
+    queryset = Tipoprod.objects.all()
     serializer_class = TipoProdSerializer
 
 class CarritoViewSet(viewsets.ModelViewSet):

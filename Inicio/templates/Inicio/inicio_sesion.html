@@ -145,19 +145,18 @@
                               <p style="color: red;">{{ i }}</p>
                           {% endfor %}
                       </div>
-  
                       {% endif %}
-                        <div class="mb-4">
-                          <label for="exampleInputEmail1" class="form-label font-weight-bold">Usuario</label>
-                          <input type="text" class="form-control bg-dark-x border-0" name="usuario" placeholder="Ingrese su username" id="usuario" >
-                          
-                        </div>
-                        <div class="mb-4">
-                          <label for="exampleInputPassword1" class="form-label font-weight-bold" >Contraseña</label>
-                          <input type="password" class="form-control bg-dark-x mb-2" name ="contra" id="contra" placeholder="Ingrese su contraseña">
-                          <a href="{% url 'recuperar_contrasenia' %}" class="form-text text-muted text-decoration-none">
-                            ¿Has olvidado tu contraseña?
-                          </a>
+                      <div class="mb-4">
+                        <label for="usuario" class="form-label font-weight-bold">Usuario</label>
+                        <input type="text" class="form-control bg-dark-x border-0" name="usuario" id="usuario" placeholder="Ingrese su username" required>
+                      </div>
+                      
+                      <div class="mb-4">
+                        <label for="contra" class="form-label font-weight-bold">Contraseña</label>
+                        <input type="password" class="form-control bg-dark-x mb-2" name="contra" id="contra" placeholder="Ingrese su contraseña" required>
+                        <a href="{% url 'recuperar_contrasenia' %}" class="form-text text-muted text-decoration-none">
+                          ¿Has olvidado tu contraseña?
+                        </a>
                     
                         <button type="submit" class="btn btn-primary w-100">Iniciar Sesión</button>
                         <div class="text-center px-lg-5 pt-lg-3 pb-lg-4 p-4 w-100 mt-auto">

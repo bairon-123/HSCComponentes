@@ -10,8 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
-from pathlib import Path
 import os
+from pathlib import Path
+import oracledb
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-4u7p!0f@wyk991sme@u6m#+ua2w3g!x*h47#ubt3&8v5d!q_$l'
 
-# SECURITY WARNING: don't run with debug turned on in production!
+
 DEBUG = True
 
 ALLOWED_HOSTS = []
@@ -111,18 +113,18 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-
-
+import oracledb
+oracledb.init_oracle_client(lib_dir=r"C:\oracle\instantclient_19_26")  # o la ruta correcta que tengas
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.oracle',
-        'NAME': 'localhost:1521/xe', 
+        'NAME': oracledb.makedsn("localhost", 1521, service_name="XE"),
         'USER': 'SYSTEM',
         'PASSWORD': 'Byron-1313',
+        # No pongas 'OPTIONS' aquí
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators

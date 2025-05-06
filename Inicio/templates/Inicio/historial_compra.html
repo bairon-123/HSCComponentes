@@ -23,51 +23,89 @@
   <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container-fluid">
-        <a class="navbar-brand text-center fw-bold" href="{% url 'inicio' %}">HSC<br>Componentes</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-    
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-    
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="{% url 'inicio' %}">
-                <i class="fa-solid fa-house"></i> Inicio
-              </a>
-            </li>
-    
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdown" role="button"
-                 data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="fa-solid fa-bag-shopping"></i> Tienda
-              </a>
-              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="{% url 'mostrarMic' 1 %}">Micrófonos</a></li>
-                <li><a class="dropdown-item" href="{% url 'teclados' 1 %}">Teclados</a></li>
-                <li><a class="dropdown-item" href="{% url 'mostrarMouse' 1 %}">Mouse Gamer</a></li>
-                <li><a class="dropdown-item" href="{% url 'mostrarGrafica' 1 %}">Tarjetas gráficas</a></li>
-                <li><a class="dropdown-item" href="{% url 'mostrarProcesador' 1 %}">Procesadores</a></li>
-                <li><a class="dropdown-item" href="{% url 'mostrarRam' 1 %}">Memorias</a></li>
+          <a class="navbar-brand fw-bold text-center" href="{% url 'index' usuario.username %}">HSC<br>Componentes</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+              data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+              aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse " id="navbarSupportedContent">
+              <ul class="navbar-nav me-auto mb-2 mb-lg-0 ">
+                  <li class="nav-item ">
+                      <a class="nav-link active " aria-current="page" href="{% url 'index' usuario.username %}"><i class="fa-solid fa-house "></i>
+                          Inicio</a>
+                  </li>
+                  <li class="nav-item dropdown">
+                      <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-bag-shopping"></i> Tienda</a></a>
+                      <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        {% if usuario %}
+                          <li><a class="dropdown-item" href="{% url 'mostrarMic' usuario.username %}">Micrófonos</a></li>
+                        {% else %} 
+                          <li><a class="dropdown-item" href="{% url 'iniciar' %}">Micrófonos</a></li>
+                        {% endif %}
+
+                        {% if usuario %}
+                          <li><a class="dropdown-item" href="{% url 'teclados'  usuario.username %}">Teclados</a></li>
+                        {% else %}
+                          <li><a class="dropdown-item" href="{% url 'iniciar' %}">Teclados</a></li> 
+                        {% endif %}
+
+                        {% if usuario %}
+                          <li><a class="dropdown-item" href="{% url 'mostrarMouse' usuario.username %}">Mouse Gamer</a></li>
+                        {% else %}
+                          <li><a class="dropdown-item" href="{% url 'iniciar' %}">Mouse Gamer</a></li> 
+                        {% endif %}
+
+                        {% if usuario %}
+                          <li><a class="dropdown-item" href="{% url 'mostrarGrafica' usuario.username  %}">Tarjetas gráficas</a></li>
+                        {% else %} 
+                          <li><a class="dropdown-item" href="{% url 'iniciar' %}">Tarjetas gráficas</a></li>
+                        {% endif %}
+
+                        {% if usuario %}
+                          <li><a class="dropdown-item" href="{% url 'mostrarProcesador' usuario.username  %}">Procesadores</a></li>
+                        {% else %}
+                          <li><a class="dropdown-item" href="{% url 'iniciar' %}">Procesadores</a></li> 
+                        {% endif %}
+
+                        {% if usuario %}
+                          <li><a class="dropdown-item" href="{% url 'mostrarRam' usuario.username%}">Memorias</a></li>
+                        {% else %}
+                          <li><a class="dropdown-item" href="{% url 'iniciar' %}">Memorias</a></li> 
+                        {% endif %}
+                      </ul>
+                    </li>
+                  <li class="nav-item">
+                      {% if usuario %}
+                          <a class="nav-link active " aria-current="page" href="{% url 'miperfil' usuario.username %}"><i class="fa-solid fa-user"></i>{{usuario.username}}</a>
+                      {% else %}
+                          <a class="nav-link active " aria-current="page" href="{% url 'iniciar' %}"><i class="fa-solid fa-user"></i> Iniciar Sesion</a>
+                      {% endif %}
+                  </li>
+                  <li class="nav-item">
+                    {% if usuario %}
+                    <a class="nav-link active" aria-current="page" href="{% url 'carrito' usuario.username %}">
+                        <i class="fa-solid fa-cart-shopping"></i> Carrito
+                    </a>
+                    {% else %}
+                    <a class="nav-link active" aria-current="page" href="#">
+                        <i class="fa-solid fa-cart-shopping"></i> Carrito
+                    </a>
+                    {% endif %}
+                  </li>
               </ul>
-            </li>
-    
-            <li class="nav-item">
-              <a class="nav-link active" href="{% url 'mostrarperfil' request.user.id %}">
-                <i class="fa-solid fa-user"></i> Mi cuenta
-              </a>
-            </li>
-    
-            <li class="nav-item">
-              <a class="nav-link active" href="{% url 'iniciar' %}">
-                <i class="fa-solid fa-sign-in-alt"></i> Iniciar Sesión
-              </a>
-            </li>
-    
-          </ul>
-    
+              <ul class="navbar-nav mb-2 mb-lg-0" >
+                <li class="nav-item">
+                  {% if usuario %}
+                  
+                  <a class="nav-link active cerrar " aria-current="page" href="{% url 'inicio' %}"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-left" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0v2z"/>
+                    <path fill-rule="evenodd" d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3z"/>
+                  </svg>          <i class="bi bi-box-arrow-left"></i>Cerrar Sesión</a>
+                  {% endif %}
+                </li>
+              </ul>
+          </div>  
           <form class="d-flex">
             <input class="form-control me-2" type="search" placeholder="Busca lo mejor!" aria-label="Search">
             <button class="btn btn-outline-success" type="submit">Buscar</button>
@@ -82,7 +120,7 @@
         En esta opción puede ver el historial de sus compras.
       </p>
       <div class="text-start boton-volver">
-        <a href="{% url 'mostrarperfil' request.user.id %}" class="boton btn btn-primary">Volver</a>
+        <a href="{% url 'miperfil' usuario.username %}" class="boton btn btn-primary">Volver</a>
       </div>
     </div>
 

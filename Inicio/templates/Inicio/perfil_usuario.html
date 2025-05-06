@@ -22,14 +22,14 @@
     <header>
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
           <div class="container-fluid">
-            <a class="navbar-brand text-center fw-bold" href="{% url 'inicio' %}">HSC<br>Componentes</a>
+            <a class="navbar-brand text-center fw-bold" href="{% url 'index' usuario.username %}">HSC<br>Componentes</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
               <ul class="navbar-nav me-auto mb-2 mb-lg-0 ">
                 <li class="nav-item ">
-                    <a class="nav-link active " aria-current="page" href="{% url 'inicio' %}"><i class="fa-solid fa-house "></i>
+                    <a class="nav-link active " aria-current="page" href="{% url 'index' usuario.username %}"><i class="fa-solid fa-house "></i>
                         Inicio</a>
                 </li>
                 <li class="nav-item dropdown">
@@ -80,15 +80,11 @@
                     {% endif %}
                 </li>
                 <li class="nav-item">
-                  {% if usuario %}
-                  <a class="nav-link active" aria-current="page" href="{% url 'carrito' usuario.username %}">
-                      <i class="fa-solid fa-cart-shopping"></i> Carrito
-                  </a>
-                  {% else %}
-                  <a class="nav-link active" aria-current="page" href="#">
-                      <i class="fa-solid fa-cart-shopping"></i> Carrito
-                  </a>
-                  {% endif %}
+                    {% if usuario %}
+                    <a class="nav-link active" aria-current="page" href="{%url 'carrito' usuario.username %}"> Carrito</a>
+                    {% else %}
+                    <a class="nav-link active" aria-current="page" href="#"> Carrito</a>
+                    {% endif %}
                 </li>
 
             </ul>
@@ -109,52 +105,76 @@
           </div>
           <!-- /modificarPerfil/      /modificarPerfil/ usuario.username  -->
           <!-- {% url 'modificarPerfil' usuario.username %} -->
-          <form id="form1" novalidate action="{% url 'modificarPerfil' usuario.username %}" method="POST" enctype="multipart/form-data" id="formUser" name="formularioUser">
+          <form id="form1" action="{% url 'modificarPerfil' usuario.username %}" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="row">
                 <div class="col-sm-12 col-xl-12">
-                  <div class="row">
-                    <div class="col-md-6 fila"><label class="labels">Nombre</label><input type="text" class="form-control" placeholder="Ej: Ignacio" id="nomusu" value="{{usuario.nombre}}" name="nomusu"></div>
-                    <div class="col-md-6 fila"><label class="labels">Apellidos</label><input type="text" class="form-control" placeholder="Ej: Salas Carrasco" id="apepusu" name="apepusu" value="{{usuario.apellido}}"></div>
-                  </div>
-                  <div class="col-md-12 fila"><label class="labels">Nombre de usuario</label><input type="text" class="form-control" placeholder="Ej: igsalas" id="username" value="{{usuario.username}}" name="username" readonly></div>
-                  <p>
-                    <b>
-                      * El nombre de usuario debe tener entre 4 y 16 caracteres y SOLO puede contener '-' y '_'. <br>
-                    </b>
-                  </p>
-                  <div class="col-md-12 fila"><label class="labels">Dirección</label><input type="text" class="form-control" placeholder="Ej: Avenida Siempre Viva 765" id="dirusu" value="{{direccion.descripcionDir}}"></div>
-                  <div class="col-md-12 fila"><label class="labels">Región</label>
-                    <select name="" id="regionusu" class="form-select negritas" aria-label="Productos" required>
-                      {% for i in region %}
-                      <option value="" >{{i.nombreReg}}</option>              
-                      {% endfor %}
-                    </select>
-                  </div>
-                  <div class="col-md-12 fila"><label class="labels">Comuna</label>
-                    <select name="" id="comunausu" class="form-select" aria-label="Productos" required>
-                      
-                      {% for i in comuna %}
-                      <option value="" >{{i.nombreCom}}</option>              
-                      {% endfor %}           
-                      
-                    </select>
-                  </div>
-                  <div class="col-md-12 fila"><label class="labels">Correo Electrónico</label><input type="text" class="form-control" placeholder="Ej: ignacio.salas@mail.com" id="mailusu" name="mailusu" value="{{usuario.email}}"></div>
-                  <div class="text-center">
-                    <button id="submit" type="submit" class="boton btn btn-primary">Guardar perfil</button>
-                  </div>
-                  <p class="msj text-center" id="mensajes1"></p>
-                  <p class="msj text-center" id="mensajes2"></p>
+        
+                    <div class="row">
+                        <div class="col-md-6 fila">
+                            <label class="labels">Nombre</label>
+                            <input type="text" class="form-control" placeholder="Ej: Ignacio"
+                                   id="nombre" name="nombre" value="{{ usuario.nombre }}" required>
+                        </div>
+                        <div class="col-md-6 fila">
+                            <label class="labels">Apellidos</label>
+                            <input type="text" class="form-control" placeholder="Ej: Salas Carrasco"
+                                   id="apellido" name="apellido" value="{{ usuario.apellido }}" required>
+                        </div>
+                    </div>
+        
+                    <div class="col-md-12 fila mt-3">
+                        <label class="labels">Correo electrónico</label>
+                        <input type="email" class="form-control" placeholder="Ej: ignacio@mail.com"
+                               id="email" name="email" value="{{ usuario.email }}" required>
+                    </div>
+        
+                    <div class="col-md-12 fila mt-3">
+                        <label class="labels">Dirección</label>
+                        <input type="text" class="form-control" placeholder="Ej: Av. Siempre Viva 123"
+                               id="direccion" name="direccion" value="{{ direccion.descripciondir }}" required>
+                    </div>
+        
+                    <div class="col-md-6 fila mt-3">
+                        <label class="labels">Región</label>
+                        <select name="region" id="region" class="form-select" required>
+                            {% for reg in region %}
+                                <option value="{{ reg.idregion }}" {% if direccion.region.idregion == reg.idregion %}selected{% endif %}>
+                                    {{ reg.nombrereg }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+        
+                    <div class="col-md-6 fila mt-3">
+                        <label class="labels">Comuna</label>
+                        <select name="comuna" id="comuna" class="form-select" required>
+                            {% for com in comuna %}
+                                <option value="{{ com.idcomuna }}" {% if direccion.comuna.idcomuna == com.idcomuna %}selected{% endif %}>
+                                    {{ com.nombrecom }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+        
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-primary">Guardar perfil</button>
+                    </div>
+                    {% if messages %}
+                        <div class="alert alert-success mt-3 text-center">
+                            {% for message in messages %}
+                                {{ message }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+        
                 </div>
             </div>
-          </form>
-      </div>
+        </form>
 
     <!-- Option 1: Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
     <!--Mi Js-->
-    <script src="{% static 'Inicio/js/v-carrito.js' %}"></script>
     <script src="{% static 'Inicio/js/v-perfil-usu.js' %}"></script>
   </body>
 </html>

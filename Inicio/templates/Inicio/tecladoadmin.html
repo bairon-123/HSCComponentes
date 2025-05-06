@@ -28,43 +28,34 @@
     <header>
         <div class="img-hd">
             <div class="txt-hd">
-                <p class="lh-lg">Teclados</p>
+                <p class="lh-lg">teclado</p>
             </div>
         </div>
     </header>
 
-    {% if messages %}
-    {% for message in messages %}
-    <div class="alert alert-dismissible alert-success">
-        <button type="button" class="btn-close" data-dismiss="alert">&times;</button>
-        <strong class="text-dark">{{ message }}</strong>
-    </div>
-    {% endfor %}
-    {% endif %}
     <section class="items">
         <div class="container">
-            <div class="text-start boton-volver">
-                <a href="{% url 'indexadmin' %}" class="boton btn btn-primary">Volver</a>
+            <div class="text-start boton-volver mb-4">
+                <a href="{% url 'menu_admin' %}" class="btn btn-primary">Volver</a>
             </div>
             <div class="row items no-gutter">
                 {% for c in teclado %}
                 <div class="col-xl-3 col-md-6 col-sm-12">
-                    <a href="{% url 'teclado' c.idProducto 'admin' %}">
-                        <img src="{{c.imagenProd.url}}" alt="Error :D" id="img2" class="img-fluid">
-                        <p class="text-break">{{c.nombreProducto}}</p>
-                        <h6>$ {{c.precioProducto}}</h6>
-                    </a>                
-                <a href="{% url 'edicionProducto' c.idProducto %}" class="btn btn-info">Editar</a></td>
-                <a href="{% url 'eliminarProducto' c.idProducto %}" class="btn btn-danger btnEliminacion">Eliminar</a>
+                    <div class="card h-100">
+                        <a href="{% url 'teclado' idk=c.idproducto usuario=usuario.username %}">
+                            <img src="/media/{{ c.imagenprod }}" alt="Imagen de teclado" class="img-fluid" id="img2">
+                        </a>
+                        <div class="card-body text-center text-dark">
+                            <p class="card-title text-break">{{ c.nombreproducto }}</p>
+                            <h6 class="card-text">$ {{ c.precioproducto }}</h6>
+                            <a href="{% url 'editar_producto' c.idproducto %}" class="btn btn-warning btn-sm">
+                                <i class="fas fa-edit"></i> Editar
+                            </a>
+                            <a href="{% url 'confirmar_eliminar' c.idproducto %}" class="btn btn-danger btnEliminacion">Eliminar</a>
+                        </div>
+                    </div>
                 </div>
-
                 {% endfor %}
-            </div>
-        </div>
-    </section>
-
-    
-
     <footer class="pie-pagina mt-auto">
 
         <div class="container">

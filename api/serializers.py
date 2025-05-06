@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from Inicio.models import Producto, Marca, TipoProd, Carrito, Usuario
+from Inicio.models import Producto, Marca, Tipoprod, Carrito, Usuario
 
 class MarcaSerializer(serializers.ModelSerializer):
     class Meta:
@@ -8,19 +8,19 @@ class MarcaSerializer(serializers.ModelSerializer):
 
 class TipoProdSerializer(serializers.ModelSerializer):
     class Meta:
-        model = TipoProd
+        model = Tipoprod
         fields = ['id', 'nombretipoprod']
 
 class ProductoSerializer(serializers.ModelSerializer):
     marca = MarcaSerializer()
-    TipoProd = TipoProdSerializer()
+    Tipoprod = TipoProdSerializer()
     imagen_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Producto
         fields = ['idproducto', 'nombreproducto', 'precioproducto', 
                 'especificacionprod', 'stockprod', 'imagen_url', 
-                'marca', 'tipoprod']
+                'marca', 'Tipoprod']
 
     def get_imagen_url(self, obj):
         if obj.imagenprod:

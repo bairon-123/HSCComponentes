@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 import os
 from pathlib import Path
 import oracledb
+oracledb.init_oracle_client(lib_dir=r"C:\oracle\instantclient_19_26")
+
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-4u7p!0f@wyk991sme@u6m#+ua2w3g!x*h47#ubt3&8v5d!q_$l'
 
-
+DEBUG_PROPAGATE_EXCEPTIONS = True
 DEBUG = True
 
 ALLOWED_HOSTS = []
@@ -47,7 +49,11 @@ INSTALLED_APPS = [
     'api',
     'Inicio',
     'drf_spectacular',
-    'django_extensions',    
+    'django_extensions',
+    'inventory',
+    'sales',
+    'payments',
+    'shipping',
 ]
 
 
@@ -85,7 +91,22 @@ TEMPLATES = [
     },
 ]
 
+LOGGING = {
+    'version': 1,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'ERROR',
+    },
+}
+
+
 WSGI_APPLICATION = 'Hsc.wsgi.application'
+
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -113,16 +134,14 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-import oracledb
-oracledb.init_oracle_client(lib_dir=r"C:\oracle\instantclient_19_26")  # o la ruta correcta que tengas
+
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.oracle',
-        'NAME': oracledb.makedsn("localhost", 1521, service_name="XE"),
-        'USER': 'SYSTEM',
-        'PASSWORD': 'Byron-1313',
-        # No pongas 'OPTIONS' aquí
+        'NAME': oracledb.makedsn("localhost", 1521, service_name="xe"),
+        'USER': 'C##HSCcomp',
+        'PASSWORD': 'hsccomp',
     }
 }
 

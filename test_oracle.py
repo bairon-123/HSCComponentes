@@ -1,4 +1,4 @@
-import oracledb # type: ignore
+import oracledb
 
 # Ruta al Instant Client
 oracledb.init_oracle_client(lib_dir=r"C:\oracle\instantclient_19_26")

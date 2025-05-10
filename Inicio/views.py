@@ -8,6 +8,7 @@ from .models import (
 from .Carrito import Carrito
 from Inicio import models
 
+
 # Create your views here.
 def inicio(request):
 

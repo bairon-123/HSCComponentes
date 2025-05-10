@@ -104,6 +104,7 @@ LOGGING = {
     },
 }
 
+LOGIN_URL = '/login/'
 
 WSGI_APPLICATION = 'Hsc.wsgi.application'
 
@@ -139,9 +140,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.oracle',
-        'NAME': oracledb.makedsn("localhost", 1521, service_name="xe"),
+        'NAME': 'xe',  # Nombre del servicio Oracle
         'USER': 'C##HSCcomp',
         'PASSWORD': 'hsccomp',
+        'HOST': 'localhost',
+        'PORT': '1521',
     }
 }
 

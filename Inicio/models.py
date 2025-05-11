@@ -6,8 +6,15 @@ from django.shortcuts import render
 
 
 
+
+
 class Cliente(models.Model):
     nombre = models.CharField(max_length=100)
+
+    class Meta:
+        managed = False
+        db_table = 'cliente'
+
 
 class Tipousuario(models.Model):
     idtipousuario = models.IntegerField(db_column='IDTIPOUSUARIO', primary_key=True)
@@ -58,19 +65,15 @@ class Region(models.Model):
         return self.nombrereg
 
 class Direccion(models.Model):
-    iddireccion = models.IntegerField(db_column='IDDIRECCION', primary_key=True)
-    descripciondir = models.TextField(db_column='DESCRIPCIONDIR')
-    region = models.ForeignKey('Region', models.DO_NOTHING, db_column='REGION_ID', null=True)
-    usuario = models.ForeignKey('Usuario', models.DO_NOTHING, db_column='USUARIO_ID')
-    comuna = models.ForeignKey('Comuna', models.DO_NOTHING, db_column='COMUNA_ID', null=True)
-
+    iddireccion = models.AutoField(db_column='IDDIRECCION', primary_key=True)
+    descripciondir = models.CharField(db_column='DESCRIPCIONDIR', max_length=100)
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, db_column='USERNAME')
+    region = models.ForeignKey(Region, on_delete=models.CASCADE, db_column='IDREGION')
+    comuna = models.ForeignKey(Comuna, on_delete=models.CASCADE, db_column='IDCOMUNA')
 
     class Meta:
         managed = False
-        db_table = 'INICIO_DIRECCION'
-
-    def __str__(self):
-        return self.descripciondir
+        db_table = 'DIRECCION'
 
 
 class Venta(models.Model):
@@ -169,12 +172,33 @@ class Carrito(models.Model):
     cantidad = models.PositiveIntegerField(default=1)
 
     class Meta:
+        managed = False
         db_table = 'carrito'
+
+
+
+
+class Modelo(models.Model):
+    idmodelo = models.IntegerField(db_column='IDMODELO', primary_key=True)
+    nombremodelo = models.CharField(db_column='NOMBREMODELO', max_length=30)
+    marca = models.ForeignKey('Marca', models.DO_NOTHING, db_column='MARCA_ID')
+
+    class Meta:
+        managed = False
+        db_table = 'INICIO_MODELO'
+
+    def __str__(self):
+        return self.nombremodelo
+    
     
 class Compra(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     fecha = models.DateTimeField(auto_now_add=True)
     total = models.DecimalField(max_digits=10, decimal_places=2)
+
+    class Meta:
+        managed = False
+        db_table = 'Compra'
 
     def __str__(self):
         return f"Compra de {self.usuario} el {self.fecha.strftime('%Y-%m-%d')}"
@@ -184,6 +208,11 @@ class DetalleCompra(models.Model):
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
     cantidad = models.IntegerField()
     subtotal = models.DecimalField(max_digits=10, decimal_places=2)
+
+    class Meta:
+        managed = False
+        db_table = 'DetalleCompra'
+    
 
     def __str__(self):
         return f"{self.cantidad} x {self.producto.nombreproducto} (Compra {self.compra.id})"

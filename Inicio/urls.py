@@ -22,8 +22,7 @@ urlpatterns = [
 
 
     path('indexadmin',inicioadmin,name="indexadmin"),
-
-    path('registrar/',registrar_m,name="registrar"),
+    path('registrar/', registrar_m, name="registrar"),
     path('registrarse/',registrarse,name="registrarse"),
     #Pag agregar producto
     path('agregar2/',newProd,name ="addProd"),

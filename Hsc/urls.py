@@ -32,10 +32,10 @@ urlpatterns = [
     ), name='openapi-schema'),
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema')),
-    path('api/ventas/', include('sales.urls')),
-    path('api/inventario/', include('inventory.urls')),
-    path('api/pagos/', include('payments.urls')),
-    path('api/envios/', include('shipping.urls')),
+    path('api/inventario/', include('APIs.inventory.urls')),
+    path('api/pagos/', include('APIs.payments.urls')),
+    path('api/ventas/', include('APIs.sales.urls')),
+    path('api/envios/', include('APIs.shipping.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

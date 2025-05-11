@@ -16,3 +16,5 @@ class ProductoForm(forms.ModelForm):
             'tipoprod': forms.Select(attrs={'class': 'form-select'}),
             'marca': forms.Select(attrs={'class': 'form-select'}),
         }
+
+        

@@ -50,10 +50,10 @@ INSTALLED_APPS = [
     'Inicio',
     'drf_spectacular',
     'django_extensions',
-    'inventory',
-    'sales',
-    'payments',
-    'shipping',
+    'APIs.inventory',
+    'APIs.sales',
+    'APIs.payments',
+    'APIs.shipping',
 ]
 
 

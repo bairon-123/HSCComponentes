@@ -6,11 +6,11 @@ from .models import (
     Producto, Marca, Categoria, Tipoprod, Tipousuario, Detalle
 )
 from .Carrito import Carrito
-from Inicio import models
 
 
 # Create your views here.
 def inicio(request):
+    
 
     return render(request,'Inicio/index.html')
 def inicioadmin(request):
@@ -35,9 +35,7 @@ def addprod(request):
 
 
 def iniciar(request):
-
-    return render(request,'Inicio/inicio_sesion.html')
-
+    return render(request, 'Inicio/inicio_sesion.html')
 
 
 def menuadmin(request):
@@ -249,7 +247,7 @@ def ram(request,idr,usuario):
     productos = Producto.objects.get(idproducto = idr)
     usuario = Usuario.objects.get(username= usuario)
     contexto = {"prod": productos,"usuario":usuario}
-    return render(request, "Inicio/mic1.html",contexto )    
+    return render(request, "Inicio/mic1.html",contexto )
 
 
 
@@ -259,40 +257,58 @@ def buscar_compra(request):
 
 
 
-
-
-
-
 def registrarse(request):
     regiones = Region.objects.all()
     comunas = Comuna.objects.all()
     contexto = {"comunas_m": comunas,"regiones_m": regiones}
     return render(request,"Inicio/registrarse.html",contexto)
 
-def registrar_m (request):
-    user = request.POST['usuario']
-    contra = request.POST['contra']
-    correo = request.POST['email']
-    region = request.POST['region']
-    direccion = request.POST['direccion']
-    comuna = request.POST['comuna']
-    nombree = request.POST['nombre']
-    apellido = request.POST['apellido']
-    comuna2 = Comuna.objects.get(idcomuna=comuna)
-    region2 = Region.objects.get(idregion=region)
-    tipousuario2 = Tipousuario.objects.get(idtipousuario=2)
-    existe = None
-    try:
-        existe = Usuario.objects.get(username=user)
-        messages.error(request,'El usuario ya existe')
-        return redirect ('registrarse')
-    except:
-        Usuario.objects.create(username = user , contrasennia = contra, nombre = nombree, apellido = apellido, email = correo,tipousuario = tipousuario2)
-        x = Usuario.objects.get(username = user)
-        Direccion.objects.create(descripciondir=direccion, usuario=x, region=region2, comuna=comuna2)
-        return redirect ('iniciar')
-    
 
+def registrar_m(request):
+    if request.method == 'POST':
+        try:
+            user = request.POST['usuario']
+            contra = request.POST['contra']
+            correo = request.POST['email']
+            region = request.POST['region']
+            direccion = request.POST['direccion']
+            comuna = request.POST['comuna']
+            nombree = request.POST['nombre']
+            apellido = request.POST['apellido']
+
+            comuna2 = Comuna.objects.get(idcomuna=comuna)
+            region2 = Region.objects.get(idregion=region)
+            tipousuario2 = Tipousuario.objects.get(idtipousuario=2)
+
+            if Usuario.objects.filter(username=user).exists():
+                messages.error(request, 'El usuario ya existe')
+                return redirect('registrarse')
+
+            usuario = Usuario.objects.create(
+                username=user,
+                contrasennia=contra,
+                nombre=nombree,
+                apellido=apellido,
+                email=correo,
+                tipousuario=tipousuario2
+            )
+
+            Direccion.objects.create(
+                descripciondir=direccion,
+                usuario=usuario,
+                region=region2,
+                comuna=comuna2
+            )
+
+            messages.success(request, '¡Usuario registrado con éxito! Ahora puedes iniciar sesión.')
+            return redirect('iniciar')
+
+        except Exception as e:
+            # Opción de depuración temporal
+            messages.error(request, f"Ocurrió un error inesperado: {e}")
+            return redirect('registrarse')
+
+    return redirect('registrarse')
         
 def iniciar_sesion(request):
     if request.method == 'POST':
